@@ -3,21 +3,32 @@ from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import json
 
 app = Flask(__name__)
 CORS(app)
 
+with open('settings.json') as settings_file:
+    settings = json.load(settings_file)
+
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.json
-    name = data['name']
-    email = data['email']
-    message = data['message']
+    if not data:
+        return jsonify({"message": "No data provided"}), 400
 
-    # メール送信の設定
-    sender_email = "info@auditive.com"
-    receiver_email = "info@auditive.com"
-    password = "KtmrzhyaMCj7z2!"
+    name = data.get('name')
+    email = data.get('email')
+    message = data.get('message')
+
+    if not all([name, email, message]):
+        return jsonify({"message": "Missing fields"}), 400
+
+    sender_email = settings['sender_email']
+    receiver_email = settings['receiver_email']
+    password = settings['password']
+    smtp_server = settings['smtp_server']
+    smtp_port = settings['smtp_port']
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -28,10 +39,9 @@ def send_email():
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        with smtplib.SMTP('smtp.zoho.jp', 587) as server:
-            server.starttls()
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
             server.login(sender_email, password)
-            server.send_message(msg)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
         return jsonify({"message": "Email sent successfully"}), 200
     except Exception as e:
         print(e)
