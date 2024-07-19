@@ -1,34 +1,26 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import json
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import json
 
-app = Flask(__name__)
-CORS(app)
-
-with open('settings.json') as settings_file:
-    settings = json.load(settings_file)
-
-@app.route('/send-email', methods=['POST'])
-def send_email():
-    data = request.json
-    if not data:
-        return jsonify({"message": "No data provided"}), 400
-
+def lambda_handler(event, context):
+    data = json.loads(event['body'])
+    
     name = data.get('name')
     email = data.get('email')
     message = data.get('message')
 
     if not all([name, email, message]):
-        return jsonify({"message": "Missing fields"}), 400
+        return {
+            'statusCode': 400,
+            'body': json.dumps({"message": "Missing fields"})
+        }
 
-    sender_email = settings['sender_email']
-    receiver_email = settings['receiver_email']
-    password = settings['password']
-    smtp_server = settings['smtp_server']
-    smtp_port = settings['smtp_port']
+    sender_email = "xxx@example.xxx"
+    receiver_email = "xxx@example.xxx"
+    password = "your_app_pass"
+    smtp_server = "smtp.zoho.xx"
+    smtp_port = 465
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -42,10 +34,13 @@ def send_email():
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, msg.as_string())
-        return jsonify({"message": "Email sent successfully"}), 200
+        return {
+            'statusCode': 200,
+            'body': json.dumps({"message": "Email sent successfully"})
+        }
     except Exception as e:
         print(e)
-        return jsonify({"message": "Failed to send email"}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({"message": "Failed to send email"})
+        }
