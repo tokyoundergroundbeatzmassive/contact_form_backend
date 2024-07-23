@@ -4,6 +4,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def lambda_handler(event, context):
+    print("Received event:", json.dumps(event))
+
     data = json.loads(event['body'])
     
     name = data.get('name')
