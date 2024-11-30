@@ -1,7 +1,0 @@
-{
-    "sender_email": "xxx@example.com",
-    "receiver_email": "xxx@example.com",
-    "password": "Your Zoho Mail App Password (not the account password)",
-    "smtp_server": "smtp.zoho.xx",
-    "smtp_port": 465
-}
