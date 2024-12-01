@@ -16,11 +16,6 @@ Parameters:
     Description: "App password for email"
 
 Resources:
-  HttpApi:
-    Type: AWS::Serverless::HttpApi
-    Properties:
-      Id: !Ref ApiId
-
   ContactFormFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -40,11 +35,29 @@ Resources:
                 - ses:SendEmail
                 - ses:SendRawEmail
               Resource: "*"
-      Events:
-        ContactApi:
-          Type: HttpApi
-          Properties:
-            Path: /auditive/contact
-            Method: POST
-            ApiId: !Ref HttpApi
-            PayloadFormatVersion: "2.0" 
+
+  ApiGatewayIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiId
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ContactFormFunction.Arn
+      PayloadFormatVersion: "2.0"
+      
+  ApiGatewayRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiId
+      RouteKey: "POST /auditive/contact"
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiGatewayIntegration
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ContactFormFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiId}/*
