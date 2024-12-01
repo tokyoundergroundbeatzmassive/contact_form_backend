@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  ApiId:
+    Type: String
+    Description: "Existing HTTP API Gateway ID"
+
 Resources:
   ContactFormFunction:
     Type: AWS::Serverless::Function
@@ -21,3 +26,10 @@ Resources:
                 - ses:SendEmail
                 - ses:SendRawEmail
               Resource: "*"
+      Events:
+        ContactApi:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ApiId
+            Path: /auditive/contact
+            Method: POST
