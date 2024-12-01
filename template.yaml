@@ -24,10 +24,9 @@ Resources:
       Runtime: python3.12
       Environment:
         Variables:
-          SENDER_EMAIL: !Ref SenderEmail    # SENDER_EMAIL から SenderEmail に変更
-          RECEIVER_EMAIL: !Ref ReceiverEmail # RECEIVER_EMAIL から ReceiverEmail に変更
-          APP_PASSWORD: !Ref AppPassword    # APP_PASSWORD から AppPassword に変更
-          SMTP_PORT: 465
+          SENDER_EMAIL: !Ref SenderEmail
+          RECEIVER_EMAIL: !Ref ReceiverEmail
+          APP_PASSWORD: !Ref AppPassword
       Policies:
         - Statement:
             - Effect: Allow
