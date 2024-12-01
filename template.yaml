@@ -60,4 +60,8 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref ContactFormFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiId}/*
+      SourceArn: !Sub 
+        - "arn:aws:execute-api:${Region}:${Account}:${ApiId}/*"
+        - Region: !Ref "AWS::Region"
+          Account: !Ref "AWS::AccountId"
+          ApiId: !Ref ApiId
