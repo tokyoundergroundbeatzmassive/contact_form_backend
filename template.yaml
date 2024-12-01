@@ -23,6 +23,7 @@ Resources:
       CodeUri: ./
       Handler: app.lambda_handler
       Runtime: python3.12
+      Timeout: 30
       Environment:
         Variables:
           SENDER_EMAIL: !Ref SenderEmail
