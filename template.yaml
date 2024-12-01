@@ -16,6 +16,11 @@ Parameters:
     Description: "App password for email"
 
 Resources:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Id: !Ref ApiId
+
   ContactFormFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -41,5 +46,5 @@ Resources:
           Properties:
             Path: /auditive/contact
             Method: POST
-            ApiId: !Ref ApiId
+            ApiId: !Ref HttpApi
             PayloadFormatVersion: "2.0" 
