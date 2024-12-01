@@ -19,6 +19,7 @@ Resources:
   ContactFormFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Ref AWS::StackName
       CodeUri: ./
       Handler: app.lambda_handler
       Runtime: python3.12
