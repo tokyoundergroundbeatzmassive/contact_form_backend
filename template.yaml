@@ -5,13 +5,13 @@ Parameters:
   ApiId:
     Type: String
     Description: "Existing HTTP API Gateway ID"
-  SENDER_EMAIL:
+  SenderEmail:
     Type: String
     Description: "Sender email address"
-  RECEIVER_EMAIL:
+  ReceiverEmail:
     Type: String
     Description: "Receiver email address"
-  APP_PASSWORD:
+  AppPassword:
     Type: String
     Description: "App password for email"
 
