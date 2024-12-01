@@ -16,6 +16,12 @@ Parameters:
     Description: "App password for email"
 
 Resources:
+  # 既存のAPI Gatewayを参照するリソース
+  ExistingApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      ApiId: !Ref ApiId
+
   ContactFormFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -39,6 +45,6 @@ Resources:
         ContactApi:
           Type: HttpApi
           Properties:
-            ApiId: !Ref ApiId
+            ApiId: !Ref ExistingApi 
             Path: /auditive/contact
             Method: POST
