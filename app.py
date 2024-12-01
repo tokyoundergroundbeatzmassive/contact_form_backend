@@ -1,3 +1,4 @@
+import os
 import json
 import smtplib
 from email.mime.text import MIMEText
@@ -18,10 +19,10 @@ def lambda_handler(event, context):
             'body': json.dumps({"message": "Missing fields"})
         }
 
-    sender_email = "xxx@example.xxx"
-    receiver_email = "xxx@example.xxx"
-    password = "your_app_pass"
-    smtp_server = "smtp.zoho.xx"
+    sender_email = os.environ['SENDER_EMAIL']
+    receiver_email = os.environ['RECEIVER_EMAIL']
+    password = os.environ['APP_PASSWORD']
+    smtp_server = "smtp.zoho.jp"
     smtp_port = 465
 
     msg = MIMEMultipart()

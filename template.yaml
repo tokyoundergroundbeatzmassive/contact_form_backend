@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          SENDER_EMAIL: ${SENDER_EMAIL}
+          RECEIVER_EMAIL: ${RECEIVER_EMAIL}
+          APP_PASSWORD: ${APP_PASSWORD}
+          SMTP_PORT: 465
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: "*"
